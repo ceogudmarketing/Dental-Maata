@@ -1,0 +1,116 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dental Mata · ConfiDental Care</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sky:#A9DCF0; --sky-deep:#6FBFE3; --sky-soft:#E3F3FB;
+    --gold:#F2BE35; --ink:#21384A; --ink-soft:#5C7488;
+    --red:#C8102E; --blue:#1E86B8; --blue-d:#176A93; --line:#D7E8F1;
+    --disp:'Baloo 2',system-ui,sans-serif; --body:'Inter',system-ui,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:var(--body);background:
+      radial-gradient(900px 500px at 80% -10%, #cfeafa 0%, transparent 60%),
+      linear-gradient(160deg,#eef6fb,#e1f0f8);
+      min-height:100vh;display:flex;align-items:flex-end;justify-content:flex-end;padding:24px;color:var(--ink)}
+  .stage{position:relative;width:100%;height:calc(100vh - 48px);max-height:720px}
+
+  /* floating launcher */
+  .launcher{position:absolute;bottom:0;right:0;width:76px;height:76px;border-radius:50%;
+    background:var(--sky);border:3px solid #fff;box-shadow:0 12px 28px rgba(31,134,184,.35);
+    cursor:pointer;overflow:hidden;display:grid;place-items:center;animation:bob 3.2s ease-in-out infinite;transition:transform .2s}
+  .launcher:hover{transform:scale(1.06)}
+  .launcher img{width:100%;height:100%;object-fit:cover;transform:scale(1.18) translateY(2px)}
+  .launcher .on{position:absolute;top:5px;right:7px;width:13px;height:13px;border-radius:50%;background:#34d27b;border:2.5px solid #fff}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+
+  /* chat panel */
+  .panel{position:absolute;bottom:0;right:0;width:374px;max-width:100%;height:100%;
+    background:#fff;border-radius:24px;box-shadow:0 24px 64px rgba(24,80,120,.28);
+    display:flex;flex-direction:column;overflow:hidden;border:1px solid #e8f1f6}
+  .head{background:linear-gradient(150deg,var(--sky) 0%,var(--sky-deep) 100%);padding:16px 16px 18px;position:relative}
+  .head .top{display:flex;align-items:center;gap:12px}
+  .head .ava{width:50px;height:50px;border-radius:16px;background:#fff;overflow:hidden;box-shadow:0 4px 12px rgba(0,0,0,.12);flex-shrink:0}
+  .head .ava img{width:100%;height:100%;object-fit:cover;transform:scale(1.16) translateY(1px)}
+  .head b{font-family:var(--disp);font-size:19px;color:#fff;display:block;letter-spacing:.2px;text-shadow:0 1px 2px rgba(0,0,0,.08)}
+  .head .sub{font-size:12px;color:#fff;opacity:.92;display:flex;align-items:center;gap:6px;margin-top:1px}
+  .head .sub i{width:7px;height:7px;border-radius:50%;background:#1f7a3f;box-shadow:0 0 0 2px rgba(255,255,255,.6)}
+  .head .min{position:absolute;top:14px;right:14px;width:28px;height:28px;border-radius:9px;background:rgba(255,255,255,.25);border:none;color:#fff;font-size:18px;cursor:pointer;line-height:1}
+  .head .crown{position:absolute;left:50px;top:8px;font-size:13px}
+
+  .stream{flex:1;overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:11px;
+    background:linear-gradient(180deg,#f5fbfe,#eef7fc)}
+  .m{max-width:84%;font-size:14px;line-height:1.5;padding:10px 13px;border-radius:16px;white-space:pre-wrap;animation:pop .2s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:none}}
+  .m.bot{align-self:flex-start;background:#fff;border:1px solid var(--line);border-bottom-left-radius:5px;box-shadow:0 1px 2px rgba(31,134,184,.06)}
+  .m.me{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:5px}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;padding:2px 16px 0}
+  .chips button{font-family:var(--body);font-size:12.5px;font-weight:500;background:#fff;border:1px solid var(--line);
+    color:var(--blue-d);padding:7px 12px;border-radius:20px;cursor:pointer;transition:.15s}
+  .chips button:hover{background:var(--blue);color:#fff;border-color:var(--blue)}
+  .dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:#9fc4d6;margin:0 1px;animation:bp 1.2s infinite}
+  .dots span:nth-child(2){animation-delay:.15s}.dots span:nth-child(3){animation-delay:.3s}
+  @keyframes bp{0%,60%,100%{opacity:.3;transform:translateY(0)}30%{opacity:1;transform:translateY(-3px)}}
+
+  form{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line);background:#fff}
+  input{flex:1;border:1.5px solid var(--line);border-radius:13px;padding:11px 14px;font-size:14px;font-family:var(--body);outline:none;color:var(--ink)}
+  input:focus{border-color:var(--sky-deep)}
+  button.send{width:46px;height:46px;border-radius:13px;background:var(--blue);border:none;cursor:pointer;display:grid;place-items:center;flex-shrink:0;transition:.15s}
+  button.send:hover{background:var(--blue-d)}button.send:disabled{opacity:.45}
+  button.send svg{width:18px;height:18px;stroke:#fff;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .foot{text-align:center;font-size:10.5px;color:var(--ink-soft);padding:0 0 9px;background:#fff}
+  .hidden{display:none !important}
+  @media(max-width:440px){.panel{width:100%;height:100%;border-radius:18px}.stage{height:calc(100vh - 32px)}body{padding:16px}}
+</style>
+
+<div class="stage">
+  <button class="launcher" id="launch" title="Chat with Dental Mata">
+    <span class="on"></span><img src="/logo.jpg" alt="Dental Mata">
+  </button>
+
+  <div class="panel" id="panel">
+    <div class="head">
+      <div class="top">
+        <div class="ava"><img src="/logo.jpg" alt="Dental Mata"></div>
+        <div>
+          <b>Dental Mata</b>
+          <div class="sub"><i></i>ConfiDental Care · online</div>
+        </div>
+      </div>
+      <button class="min" id="min" title="Minimise">–</button>
+    </div>
+    <div class="stream" id="stream"></div>
+    <div class="chips" id="chips"></div>
+    <form id="f">
+      <input id="i" placeholder="Type your message…" autocomplete="off">
+      <button class="send" type="submit" id="send" title="Send"><svg viewBox="0 0 24 24"><path d="M3 11 21 3l-8 18-2.5-7.5L3 11Z"/></svg></button>
+    </form>
+    <div class="foot">Painless, modern dental care · Bidhannagar, Durgapur</div>
+  </div>
+</div>
+
+<script>
+// Point API_URL at your deployed Dental Mata server.
+const API_URL=(location.origin||"http://localhost:3000")+"/chat";
+const sid="web-"+(localStorage.getItem("dm_sid")||(localStorage.setItem("dm_sid",Math.random().toString(36).slice(2)),localStorage.getItem("dm_sid")));
+const stream=document.getElementById('stream'),F=document.getElementById('f'),I=document.getElementById('i'),send=document.getElementById('send');
+const panel=document.getElementById('panel'),launch=document.getElementById('launch');
+function add(t,who){const d=document.createElement('div');d.className='m '+who;d.textContent=t;stream.appendChild(d);stream.scrollTop=stream.scrollHeight;return d;}
+add("Namaste! 🦷👑 I'm Dental Mata, the front desk for ConfiDental Care. I can book your visit, answer questions about treatments and fees, or fast-track you if you're in pain. How can I help today?","bot");
+const quick=["Book a cleaning","I have a toothache","What does a root canal cost?","Are you open Saturday?"];
+document.getElementById('chips').innerHTML=quick.map(q=>`<button>${q}</button>`).join('');
+document.querySelectorAll('.chips button').forEach(b=>b.onclick=()=>{I.value=b.textContent;F.requestSubmit();});
+launch.onclick=()=>{panel.classList.remove('hidden');launch.classList.add('hidden');};
+document.getElementById('min').onclick=()=>{panel.classList.add('hidden');launch.classList.remove('hidden');};
+F.onsubmit=async(e)=>{
+  e.preventDefault();const text=I.value.trim();if(!text)return;I.value='';
+  add(text,'me');send.disabled=true;
+  const t=add('','bot');t.innerHTML='<span class="dots"><span></span><span></span><span></span></span>';
+  try{
+    const r=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({sessionId:sid,message:text})});
+    const data=await r.json();t.textContent=data.reply;
+  }catch(err){t.textContent="Sorry — I couldn't reach the clinic just now. Please call +91 9849878238.";}
+  send.disabled=false;I.focus();
+};
+</script>
