@@ -9,6 +9,15 @@ const app = express();
 app.use(express.json({ verify: (req, _res, buf) => { req.rawBody = buf; } }));
 app.use(express.static("public"));
 
+// Allow the website (a different domain) to call this server from the browser.
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  res.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  if (req.method === "OPTIONS") return res.sendStatus(204);
+  next();
+});
+
 const V = process.env.WHATSAPP_API_VERSION || "v21.0";
 
 /* ===========================================================
