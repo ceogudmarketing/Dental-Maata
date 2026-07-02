@@ -26,7 +26,7 @@ export async function reply({ channel, user, text, fromPhone }) {
     model: "claude-sonnet-4-6",
     max_tokens: 1000,
     system: systemPrompt(ctx),
-    messages: history(channel, user)
+    messages: history(channel, user).slice(-16).map(x => ({ role: x.role, content: x.content }))
   });
 
   let raw = res.content.map(b => b.text || "").join("").trim();

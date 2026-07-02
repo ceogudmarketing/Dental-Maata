@@ -6,6 +6,7 @@
 import fs from "fs";
 import ExcelJS from "exceljs";
 import { CLINIC } from "./config.js";
+import { addCalendarEvent } from "./calendar.js";
 
 const DB_PATH = "./data.json";
 const EXCEL_PATH = process.env.EXCEL_PATH || "./ConfiDental-Practice-Manager.xlsx";
@@ -26,10 +27,21 @@ export function history(channel, user) {
   return (db.chats[key] ||= []);
 }
 export function remember(channel, user, role, content) {
-  history(channel, user).push({ role, content });
   const h = history(channel, user);
-  if (h.length > 16) db.chats[`${channel}:${user}`] = h.slice(-16);
+  h.push({ role, content, t: Date.now() });
+  if (h.length > 40) db.chats[`${channel}:${user}`] = h.slice(-40);
   persist();
+}
+
+// All conversations, newest first — for the /inbox viewer.
+export function listChats() {
+  return Object.entries(db.chats).map(([key, msgs]) => {
+    const i = key.indexOf(":");
+    const channel = key.slice(0, i), user = key.slice(i + 1);
+    const last = msgs[msgs.length - 1] || {};
+    return { channel, user, count: msgs.length, lastAt: last.t || 0,
+      preview: (last.content || "").slice(0, 90), messages: msgs };
+  }).sort((a, b) => b.lastAt - a.lastAt);
 }
 
 // Apply the actions Dental Mata returned. Returns a short log array.
@@ -49,6 +61,7 @@ export async function applyActions(actions, channel) {
       db.accounts.push({ date: appt.date, patient: appt.patient,
         treatment: appt.reason, charge: appt.fee, paid: 0 });
       log.push(`Booked ${appt.patient} ${appt.date} ${appt.time}`);
+      try { await addCalendarEvent(appt); } catch (e) { console.error("Calendar:", e.message); }
     } else if (a.type === "reschedule") {
       const ap = [...db.appts].reverse().find(x => x.patient === a.patient_name && x.status === "Booked");
       if (ap) { ap.date = a.date; ap.time = a.time; log.push(`Rescheduled ${a.patient_name}`); }
